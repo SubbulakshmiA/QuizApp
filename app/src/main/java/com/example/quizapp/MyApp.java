@@ -20,6 +20,7 @@ public class MyApp extends Application {
     int numOfAttempts = 0;
     int progress = 0;
     QuestionBank qb ;
+    int selectedNumOfQuestions = 0;
 
     public ArrayList<Integer> getListOfShuffledColors(Context context) {
         if(qb == null){

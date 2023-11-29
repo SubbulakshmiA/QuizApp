@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AlertEndOFQuizFragment.AlertBtnClicked{
 
@@ -31,11 +32,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int correctAnswer ;
     int numOfAttempts;
     int totalNumOfCorrectAnswer = 0;
-    ArrayList<Question> listOfShuffledQuestion;
-    ArrayList<Integer> listOfShuffledColors;
+    List<Question> listOfShuffledQuestion;
+    List<Integer> listOfShuffledColors;
     FileManager fileManager;
     String questionToFrag;
     int colorCodeToFrag;
+    int selectedNumOfQuestions ;
     AlertEndOFQuizFragment alertFrag;
 
     @Override
@@ -50,14 +52,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar  = findViewById(R.id.progress_bar);
         progressBar.setProgress(progress);
 
-        listOfShuffledQuestion = ((MyApp)getApplication()).getListOfShuffledQuestion(this);
-        listOfShuffledColors = ((MyApp)getApplication()).getListOfShuffledColors(this);
-//        listOfShuffledQuestion = ((MyApp)getApplication()).getQb().getQuestionList(); // not working
+        selectedNumOfQuestions = ((MyApp)getApplication()).selectedNumOfQuestions;
 
-        for(int i =0; i< listOfShuffledQuestion.size(); i++){
-//            Log.d("listOfShuffledQuestion","listOfShuffledQuestion "+i +" --> "+listOfShuffledQuestion.get(i).question);
-//            Log.d("listOfShuffledColors","listOfShuffledColors "+i +" --> "+listOfShuffledColors.get(i));
+        if(selectedNumOfQuestions == 0 || selectedNumOfQuestions == 2){
+            listOfShuffledQuestion = ((MyApp)getApplication()).getListOfShuffledQuestion(this);
+            listOfShuffledColors = ((MyApp)getApplication()).getListOfShuffledColors(this);
+        } else if (selectedNumOfQuestions == 1) {
+            listOfShuffledQuestion =  (((MyApp)getApplication())
+                    .getListOfShuffledQuestion(this)).subList(0,4);
+            listOfShuffledColors =  (((MyApp)getApplication())
+                    .getListOfShuffledColors(this)).subList(0,4);
         }
+
         index = ((MyApp)getApplication()).index;
         correctAnswer = ((MyApp)getApplication()).correctAnswer;
         fileManager = ((MyApp)getApplication()).fileManager;
@@ -75,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragment(questionToFrag,colorCodeToFrag);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("on menu clicked","average clicked ");
             return true;
         }else if(i == R.id.num_of_quest){
+            CustomDialogFragment cf = new CustomDialogFragment(MainActivity.this);
+            cf.showDialog(MainActivity.this);
             Log.d("on menu clicked","numof quest clicked ");
             return  true;
         }else{
@@ -123,33 +130,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         Button btn = (Button) view;
-            Log.d("btn","btn clicked ");
             progress +=10;
         ((MyApp)getApplication()).progress = progress;
             progressBar.setProgress(progress);
-//        Log.d("ques in main","ques "+listOfShuffledQuestion.get(index).question.toString());
-        Log.d("index in frag","index inn main "+index);
 
         if(index < numOfQuestions ) {
         if(btn == trueBtn && listOfShuffledQuestion.get(index).answer){
             Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
             correctAnswer += 1;
             ((MyApp)getApplication()).correctAnswer = correctAnswer;
-            Log.d("correctAnswer","correctAnswer "+correctAnswer);
+//            Log.d("correctAnswer","correctAnswer "+correctAnswer);
 
         } else if (btn == falseBtn && !listOfShuffledQuestion.get(index).answer) {
             Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
             correctAnswer += 1;
             ((MyApp)getApplication()).correctAnswer = correctAnswer;
-            Log.d("correctAnswer","correctAnswer "+correctAnswer);
+//            Log.d("correctAnswer","correctAnswer "+correctAnswer);
 
         } else{
             Toast.makeText(this,"Wrong answer",Toast.LENGTH_SHORT).show();
         }
 
-//            index += 1;
-            if(index < numOfQuestions-1){
-                index += 1;
+            index += 1;
+            if(index < numOfQuestions){
                 questionToFrag = listOfShuffledQuestion.get(index).question;
                 colorCodeToFrag = listOfShuffledColors.get(index);
                 fragment(questionToFrag,colorCodeToFrag);
@@ -159,14 +162,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 callEndOfQuizAlertFrag();
             }
         }
-//        else{
-//            callEndOfQuizAlertFrag();
-//        }
-//        Log.d("index in frag","index inn main after click  "+index);
-
     }
+
     void callEndOfQuizAlertFrag(){
-        Log.d("end of quiz","end of quiz");
+//        Log.d("end of quiz","end of quiz");
 
         AlertEndOFQuizFragment.newInstance("Your Score is : "+correctAnswer +" out of "+numOfQuestions)
                 .show(getSupportFragmentManager(),"Alert");
@@ -209,6 +208,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void alertBtnClicked() {
         Log.d("restart","restart new quiz");
+        QuestionFragment qfrag =  (QuestionFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        getSupportFragmentManager().beginTransaction().detach(qfrag).attach(qfrag).commit();
         fragment(questionToFrag,colorCodeToFrag);
 
     }

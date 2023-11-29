@@ -47,7 +47,12 @@ public class AlertEndOFQuizFragment extends DialogFragment {
                 listener.alertBtnClicked();
             }
         });
-        builder.setNegativeButton("Ignore", null);
+        builder.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                listener.alertBtnClicked();
+            }
+        });
         return builder
                 .create();
     }
