@@ -7,6 +7,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,AlertEndOFQuizFragment.AlertBtnClicked{
 
@@ -31,17 +38,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int correctAnswer ;
     int numOfAttempts;
     int totalNumOfCorrectAnswer = 0;
-    ArrayList<Question> listOfShuffledQuestion;
-    ArrayList<Integer> listOfShuffledColors;
+    int totalNumOfQuestionsAnswered ;
+
+    List<Question> listOfShuffledQuestion;
+    List<Integer> listOfShuffledColors;
     FileManager fileManager;
     String questionToFrag;
     int colorCodeToFrag;
+    int selectedNumOfQuestions ;
+    int configChange = 0;
     AlertEndOFQuizFragment alertFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         trueBtn = findViewById(R.id.true_btn);
         trueBtn.setOnClickListener(this);
@@ -50,20 +62,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar  = findViewById(R.id.progress_bar);
         progressBar.setProgress(progress);
 
-        listOfShuffledQuestion = ((MyApp)getApplication()).getListOfShuffledQuestion(this);
-        listOfShuffledColors = ((MyApp)getApplication()).getListOfShuffledColors(this);
-//        listOfShuffledQuestion = ((MyApp)getApplication()).getQb().getQuestionList(); // not working
+        selectedNumOfQuestions = ((MyApp)getApplication()).selectedNumOfQuestions;
 
-        for(int i =0; i< listOfShuffledQuestion.size(); i++){
-//            Log.d("listOfShuffledQuestion","listOfShuffledQuestion "+i +" --> "+listOfShuffledQuestion.get(i).question);
-//            Log.d("listOfShuffledColors","listOfShuffledColors "+i +" --> "+listOfShuffledColors.get(i));
+        if(selectedNumOfQuestions == 0 || selectedNumOfQuestions == 2){
+            listOfShuffledQuestion = ((MyApp)getApplication()).getListOfShuffledQuestion(this);
+            listOfShuffledColors = ((MyApp)getApplication()).getListOfShuffledColors(this);
+        } else if (selectedNumOfQuestions == 1) {
+            listOfShuffledQuestion =  (((MyApp)getApplication())
+                    .getListOfShuffledQuestion(this)).subList(0,4);
+            listOfShuffledColors =  (((MyApp)getApplication())
+                    .getListOfShuffledColors(this)).subList(0,4);
         }
+
         index = ((MyApp)getApplication()).index;
         correctAnswer = ((MyApp)getApplication()).correctAnswer;
         fileManager = ((MyApp)getApplication()).fileManager;
         numOfAttempts = ((MyApp)getApplication()).numOfAttempts;
         totalNumOfCorrectAnswer = ((MyApp)getApplication()).totalNumOfCorrectAnswer;
         progress =  ((MyApp)getApplication()).progress;
+        totalNumOfQuestionsAnswered = ((MyApp)getApplication()).totalNumOfQuestionsAnswered;
 
 
         numOfQuestions = listOfShuffledQuestion.size();
@@ -74,8 +91,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         colorCodeToFrag = listOfShuffledColors.get(index);
         fragment(questionToFrag,colorCodeToFrag);
 
+//        fileManager.deleteAllToDos(this);
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d("orientation","orientation "+newConfig.orientation);
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            configChange = 2;
+            ((MyApp)getApplication()).listOfShuffledQuestion = (ArrayList<Question>) listOfShuffledQuestion;
+        }else{
+            configChange = 1;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,17 +117,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int i = item.getItemId();
         if(i == R.id.average ){
-            String getResultFromFile = fileManager.getAllToDos(this);
-            if(getResultFromFile.isEmpty())
-                getResultFromFile = "No results available";
+            String msg ="";
+            String fromFileToDisplay ="";
+            ArrayList<String> getResultFromFile = fileManager.getAllToDos(this);
+
+            ArrayList<Integer> correctScoreFromFile = fileManager.extractScores(getResultFromFile);
+                for(int s:correctScoreFromFile){
+                    Log.d("correctScoreFromFile","correctScoreFromFile "+correctScoreFromFile);
+                }
+                fromFileToDisplay = "Your score is "+correctScoreFromFile.get(0)+"/"+correctScoreFromFile.get(1)+
+                        " in "+correctScoreFromFile.get(2)+" attempts";
+            if(!getResultFromFile.isEmpty()){
+                msg = fromFileToDisplay;
+            }else{
+                msg = "No Result to show";
+            }
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Average");
-            builder.setMessage(getResultFromFile);
+            builder.setMessage(msg);
             builder.setPositiveButton("Ok",null);
             builder.create().show();
             Log.d("on menu clicked","average clicked ");
             return true;
         }else if(i == R.id.num_of_quest){
+            CustomDialogFragment cf = new CustomDialogFragment(MainActivity.this);
+            cf.showDialog(MainActivity.this);
             Log.d("on menu clicked","numof quest clicked ");
             return  true;
         }else{
@@ -122,68 +166,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+
         Button btn = (Button) view;
-            Log.d("btn","btn clicked ");
-            progress +=10;
+            progress += 10;
         ((MyApp)getApplication()).progress = progress;
             progressBar.setProgress(progress);
-//        Log.d("ques in main","ques "+listOfShuffledQuestion.get(index).question.toString());
-        Log.d("index in frag","index inn main "+index);
 
         if(index < numOfQuestions ) {
         if(btn == trueBtn && listOfShuffledQuestion.get(index).answer){
-            Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getResources().getString(R.string.correct),Toast.LENGTH_SHORT).show();
             correctAnswer += 1;
             ((MyApp)getApplication()).correctAnswer = correctAnswer;
-            Log.d("correctAnswer","correctAnswer "+correctAnswer);
 
         } else if (btn == falseBtn && !listOfShuffledQuestion.get(index).answer) {
-            Toast.makeText(this,"Correct",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.correct),Toast.LENGTH_SHORT).show();
             correctAnswer += 1;
             ((MyApp)getApplication()).correctAnswer = correctAnswer;
-            Log.d("correctAnswer","correctAnswer "+correctAnswer);
 
         } else{
-            Toast.makeText(this,"Wrong answer",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.wrong_answer),Toast.LENGTH_SHORT).show();
         }
 
-//            index += 1;
-            if(index < numOfQuestions-1){
-                index += 1;
+            index += 1;
+            if(index < numOfQuestions){
                 questionToFrag = listOfShuffledQuestion.get(index).question;
                 colorCodeToFrag = listOfShuffledColors.get(index);
                 fragment(questionToFrag,colorCodeToFrag);
                 ((MyApp)getApplication()).index = index;
             }else{
-
                 callEndOfQuizAlertFrag();
             }
         }
-//        else{
-//            callEndOfQuizAlertFrag();
-//        }
-//        Log.d("index in frag","index inn main after click  "+index);
-
     }
-    void callEndOfQuizAlertFrag(){
-        Log.d("end of quiz","end of quiz");
 
-        AlertEndOFQuizFragment.newInstance("Your Score is : "+correctAnswer +" out of "+numOfQuestions)
+    void callEndOfQuizAlertFrag(){
+
+        AlertEndOFQuizFragment.newInstance(getString(R.string.your_score_is)+correctAnswer +getString(R.string.out_of)+numOfQuestions)
                 .show(getSupportFragmentManager(),"Alert");
         AlertEndOFQuizFragment.listener = MainActivity.this;
 
         numOfAttempts += 1;
+        totalNumOfQuestionsAnswered += numOfQuestions;
+        ((MyApp)getApplication()).totalNumOfQuestionsAnswered = totalNumOfQuestionsAnswered;
         ((MyApp)getApplication()).totalNumOfCorrectAnswer += correctAnswer;
         ((MyApp)getApplication()).numOfAttempts = numOfAttempts;
-        Log.d("end of quiz","totalNumOfCorrectAnswer "+((MyApp)getApplication()).totalNumOfCorrectAnswer);
 
         index = 0;
         ((MyApp)getApplication()).index = index;
         correctAnswer = 0;
         listOfShuffledQuestion = ((MyApp)getApplication()).getListOfShuffledQuestion(MainActivity.this);
-        for(int i =0; i< listOfShuffledQuestion.size(); i++){
-            Log.d("listOfShuffledQuestion","listOfShuffledQuestion "+i +" --> "+listOfShuffledQuestion.get(i).question);
-        }
         questionToFrag = listOfShuffledQuestion.get(index).question;
         colorCodeToFrag = listOfShuffledColors.get(index);
         progress = 0;
@@ -195,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         QuestionFragment questFrag1 = (QuestionFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout);
 
         QuestionFragment questFrag =QuestionFragment.newInstance( questionToFrag,colorCodeToFrag);
-//        Log.d("index in frag","index inn main "+index);
 
         if(questFrag1 == null){
             getSupportFragmentManager().beginTransaction().add(R.id.frame_layout, questFrag).commit();
@@ -209,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void alertBtnClicked() {
         Log.d("restart","restart new quiz");
+        QuestionFragment qfrag =  (QuestionFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+        getSupportFragmentManager().beginTransaction().detach(qfrag).attach(qfrag).commit();
         fragment(questionToFrag,colorCodeToFrag);
 
     }

@@ -15,4 +15,17 @@
     <string name="question6">Bundles are used to pass the required data between various Android activities</string>
     <string name="question7">When the screen is rotated, the current instance of activity is destroyed a new instance of the Activity is created in the new orientation.</string>
     <string name="question8">Fragment life-cycle is same as activity</string>
+    <string name="_4_questions">4 questions</string>
+    <string name="_8_questions">8 questions</string>
+    <string name="select_the_number_of_question">Select the number of question</string>
+    <string name="correct">Correct</string>
+    <string name="wrong_answer">Wrong answer</string>
+    <string name="your_score_is">"Your Score is : "</string>
+    <string name="out_of">" out of "</string>
+    <string name="your_correct_answers_are">"Your correct answers are "</string>
+    <string name="attempts">" attempts \n"</string>
+    <string name="in">" in "</string>
+    <string name="result">Results</string>
+    <string name="save">Save</string>
+    <string name="ignore">Ignore</string>
 </resources>

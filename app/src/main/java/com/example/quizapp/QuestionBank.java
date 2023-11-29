@@ -18,7 +18,7 @@ public class QuestionBank {
         Question q5 = new Question(context.getResources().getString(R.string.question5),false);
         Question q6 = new Question(context.getResources().getString(R.string.question6),true);
         Question q7 = new Question(context.getResources().getString(R.string.question7),true);
-        Question q8 = new Question(context.getResources().getString(R.string.question7),false);
+        Question q8 = new Question(context.getResources().getString(R.string.question8),false);
         if(questionList == null){
             questionList = new ArrayList<>();
             questionList.add(q1);
