@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">QuizApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="reset_the_saved_result">Reset the saved Result</string>
+    <string name="select_the_number_of_questions">Select the number of Questions</string>
+    <string name="get_the_average">Get the Average</string>
+    <string name="truebtn">TRUE</string>
+    <string name="falsebtn">FALSE</string>
+    <string name="question1">When you are creating an Android app using Android Studio, you will have an activity_main.xml file which can be opened in the design and code mode.</string>
+    <string name="question2">You can add an image to your Android app by simply copying the image from the folder where it is stored in your computer, and then pasting it in the images location on your Android Studio.</string>
+    <string name="question3">Android Spinner widget provides a quick way to select one value from a set of choices.</string>
+    <string name="question4">You use the RecyclerView widget when you have data collections whose elements do Not change at runtime and without any user action or network</string>
+    <string name="question5">Explicit Intent used to invoke system component </string>
+    <string name="question6">Bundles are used to pass the required data between various Android activities</string>
+    <string name="question7">When the screen is rotated, the current instance of activity is destroyed a new instance of the Activity is created in the new orientation.</string>
+    <string name="question8">Fragment life-cycle is same as activity</string>
+</resources>
