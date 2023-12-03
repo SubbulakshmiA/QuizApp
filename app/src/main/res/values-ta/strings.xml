@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">வினாடி வினா</string>
+    <string name="hello_blank_fragment">வணக்கம் வெற்று துண்டு</string>
+    <string name="reset_the_saved_result">சேமித்த முடிவை மீட்டமைக்கவும்</string>
+    <string name="select_the_number_of_questions">கேள்விகளின் எண்ணிக்கையைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="get_the_average">சராசரியைப் பெறுங்கள்</string>
+    <string name="truebtn">உண்மை</string>
+    <string name="falsebtn">தவறு</string>
+    <string name="question1">Android ஸ்டுடியோவைப் பயன்படுத்தி நீங்கள் Android பயன்பாட்டை உருவாக்கும்போது, வடிவமைப்பு மற்றும் குறியீடு பயன்முறையில் திறக்கக்கூடிய ஒரு செயல்பாடு_மெய்ன். XML கோப்பு உங்களிடம் இருக்கும்.</string>
+    <string name="question2">உங்கள் கணினியில் சேமிக்கப்பட்டுள்ள கோப்புறையிலிருந்து படத்தை நகலெடுப்பதன் மூலம் உங்கள் Android பயன்பாட்டில் ஒரு படத்தை சேர்க்கலாம், பின்னர் அதை உங்கள் Android ஸ்டுடியோவில் உள்ள படங்களில் ஒட்டலாம்.</string>
+    <string name="question3">ஆண்ட்ராய்டு ஸ்பின்னர் விட்ஜெட் ஒரு தேர்வின் தொகுப்பிலிருந்து ஒரு மதிப்பைத் தேர்ந்தெடுக்க விரைவான வழியை வழங்குகிறது.</string>
+    <string name="question4">உங்களிடம் தரவு சேகரிப்புகள் இருக்கும்போது மறுசுழற்சி பார்வை விட்ஜெட்டைப் பயன்படுத்துகிறீர்கள், அதன் கூறுகள் இயக்க நேரத்தில் மற்றும் எந்த பயனர் செயல் அல்லது பிணையமும் இல்லாமல் மாறாது</string>
+    <string name="question5">கணினி கூறுகளை செயல்படுத்த பயன்படுத்தப்படும் வெளிப்படையான நோக்கம் </string>
+    <string name="question6">பல்வேறு ஆண்ட்ராய்டு நடவடிக்கைகளுக்கு இடையில் தேவையான தரவை அனுப்ப "Bundles" பயன்படுத்தப்படுகின்றன</string>
+    <string name="question7">திரை சுழலும் போது, செயல்பாட்டின் தற்போதைய நிகழ்வு அழிக்கப்படுகிறது, செயல்பாட்டின் புதிய நிகழ்வு புதிய நோக்குநிலையில் உருவாக்கப்படுகிறது.</string>
+    <string name="question8">துண்டு வாழ்க்கை-சுழற்சி செயல்பாட்டிற்கு சமம்</string>
+    <string name="_4_questions">4 கேள்விகள்</string>
+    <string name="_8_questions">8 கேள்விகள்</string>
+    <string name="select_the_number_of_question">கேள்விகளின் எண்ணிக்கையைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="correct">சரி</string>
+    <string name="wrong_answer">தவறான பதில்</string>
+    <string name="your_score_is">உங்கள் மதிப்பெண் : </string>
+    <string name="out_of"> / </string>
+    <string name="your_correct_answers_are"> உங்கள் சரியான பதில்கள் </string>
+    <string name="attempts"> முயற்சிகள் </string>
+    <string name="in"> இல் </string>
+    <string name="result">முடிவுகள் </string>
+    <string name="save">சேமிக்கவும்</string>
+    <string name="ignore">புறக்கணிக்கவும்</string>
+</resources>
