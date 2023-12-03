@@ -12,7 +12,6 @@ public class MyApp extends Application {
 
     ArrayList<Question> listOfShuffledQuestion ;
     ArrayList<Integer> listOfShuffledColors;
-    ArrayList<Average> averageResultToFile = new ArrayList<>();
     FileManager fileManager = new FileManager();
     int index = 0;
     int correctAnswer = 0;

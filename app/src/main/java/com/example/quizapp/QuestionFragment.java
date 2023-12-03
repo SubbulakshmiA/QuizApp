@@ -23,7 +23,6 @@ public class QuestionFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    ArrayList<Question> listOfShuffledColors ;
 
 
     // TODO: Rename and change types of parameters
@@ -65,10 +64,7 @@ public class QuestionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-//        Log.d("index in frag","index "+index);
         View view =  inflater.inflate(R.layout.fragment_question, container, false);
-//        listOfShuffledColors = ((MyApp)getActivity().getApplicationContext()).getListOfShuffledColors();
         txt = view.findViewById(R.id.quest_fragment);
         txt.setBackgroundColor(colorCode);
         txt.setText(question);
@@ -76,14 +72,4 @@ public class QuestionFragment extends Fragment {
         return view;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        listOfShuffledQuestion = ((MyApp)getActivity().getApplicationContext()).getListOfShuffledQuestion();
-////        txt = view.findViewById(R.id.quest_fragment);
-//        Log.d("index in frag","index in onResume frag"+index);
-//        txt.setText(listOfShuffledQuestion.get(index).question.toString());
-//
-//
-//    }
 }

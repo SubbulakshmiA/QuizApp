@@ -23,13 +23,10 @@ public class AlertEndOFQuizFragment extends DialogFragment {
     int numOfQuestions;
     int correctAnswer ;
     int numOfAttempts;
-    int numOfAttemptsFromFile = 0;
     FileManager fileManager;
     String resultToFile;
     static AlertBtnClicked listener;
     int totalNumOfQuestionsAnswered ;
-    int totalNumOfQuestionsAnsweredFromFile = 0;
-    int totalNumOfCorrectAnswerFromFile = 0;
     public static AlertEndOFQuizFragment newInstance(String m){
         msg = m;
         return new AlertEndOFQuizFragment();
